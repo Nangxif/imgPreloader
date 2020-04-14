@@ -1,0 +1,38 @@
+{
+  "name": "ImgPreloader",
+  "version": "0.1.0",
+  "description": "图片预加载",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --hot --inline",
+    "lib": "webpack"
+  },
+  "main":"dist/imgPreloader.min.js",
+  "homepage": "https://github.com/Nangxif/imgPreloader/build#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nangxif/imgPreloader.git"
+  },
+  "keywords": [
+    "images",
+    "preload"
+  ],
+  "private":false,
+  "author": "Nangxif",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-loader": "^8.1.0",
+    "vue-loader": "^15.9.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "ios >= 9",
+    "android >= 5",
+    "chrome >= 36",
+    "not dead",
+    "not op_mini all"
+  ]
+}

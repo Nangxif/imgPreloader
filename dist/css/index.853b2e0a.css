@@ -1,0 +1,1 @@
+.loading{margin:auto;position:absolute;left:0;right:0;top:10px;bottom:0;width:100%;text-align:center;height:100px;padding-top:20px}.loading .rotate_box{margin:auto;right:0;width:60%;background-color:#ff0}.loading .rotate_box,.loading .rotate_box .rotate{position:absolute;left:0;top:0;height:12px;border-radius:6px}.loading .rotate_box .rotate{background-color:red}
