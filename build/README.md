@@ -1,6 +1,6 @@
 # ImgPreload
 
-图片预加载
+一个图片预加载组件
 
 ## 一、用法
 
@@ -32,3 +32,5 @@ components: {
 | @finish | 一个接收图片加载完成信息的函数 | 该事件在图片全部加载完成的时候会触发，在接收的函数中可以定义图片加载完成后的相关工作，比如图片加载完，再跳转其他页面，或者显示其他东西 |
 
 ## 三、demo
+
+https://nangxif.github.io/imgPreloader/dist/index.html
