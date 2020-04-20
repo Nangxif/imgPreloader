@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "image": "node ./createImage/index.js -i ../example/assets/images -j imglist.js -d ../example/config",
+    "image": "node ./createImage/index.js",
     "dep_serve": "npm run image && npm run serve"
   },
   "dependencies": {

@@ -4,15 +4,11 @@ const ora = require('ora');
 const shell = require('shelljs');
 const chalk = require('chalk');
 const resolve = path.join;
-const program = require('./commander');
-const { images, js, dir } = program;
-
-const fileName = `${js}.js` || 'imglist.js';
-const fileDir = dir || '../src/config/';
-const imagesPath = images || '../src/assets/images';
+const { filename, output, entry, judge } = require('./config');
+const fileName = filename || 'imglist.js';
+const fileDir = output || '../src/config/';
+const imagesPath = entry || '../src/assets/images';
 let img = {};
-// 判断条件
-const judge = require('./judgement');
 // 遍历图片文件夹
 const mapDir = (baseDir, judge = '', level = 0) => {
   let files;
@@ -72,6 +68,10 @@ const mapDir = (baseDir, judge = '', level = 0) => {
     }
   });
 };
+// 判断是否为数组
+const isArray = arr => {
+  return toString.call(arr) === '[object Array]';
+};
 const spinner = ora('create the imageList...');
 const makeJs = baseDir => {
   spinner.start();
@@ -110,14 +110,24 @@ const makeJs = baseDir => {
     } else {
       fs.appendFileSync(
         resolve(__dirname, fileDir, fileName),
-        `if(${judge[item[0]]}){\n`
+        `if(${isArray(judge[item[0]]) ? judge[item[0]][0] : judge[item[0]]}){\n`
       );
       Object.entries(item[1]).forEach(i => {
-        fs.appendFileSync(resolve(__dirname, fileDir, fileName), `//${i[0]}\n`);
-        fs.appendFileSync(
-          resolve(__dirname, fileDir, fileName),
-          `imgsList.push(${i[1]});\n`
-        );
+        if (
+          !isArray(judge[item[0]]) ||
+          !judge[item[0]][1] ||
+          !judge[item[0]][1].exclude ||
+          judge[item[0]][1].exclude.find(a => a != i[0])
+        ) {
+          fs.appendFileSync(
+            resolve(__dirname, fileDir, fileName),
+            `//${i[0]}\n`
+          );
+          fs.appendFileSync(
+            resolve(__dirname, fileDir, fileName),
+            `imgsList.push(${i[1]});\n`
+          );
+        }
       });
       fs.appendFileSync(resolve(__dirname, fileDir, fileName), `}\n`);
     }

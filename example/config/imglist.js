@@ -2,14 +2,6 @@ let imgsList = [];
 //公共图片
 imgsList.push(require('../assets/images/logo12.png'));
 if (/PARS/i.test(navigator.userAgent)) {
-  //../example/assets/images/pars/i
-  imgsList.push(
-    require('../assets/images/pars/i/logo.png'),
-    require('../assets/images/pars/i/logo1.png'),
-    require('../assets/images/pars/i/logo2.png'),
-    require('../assets/images/pars/i/logo3.png'),
-    require('../assets/images/pars/i/logo4.png')
-  );
   //../example/assets/images/pars
   imgsList.push(
     require('../assets/images/pars/logo5.png'),
