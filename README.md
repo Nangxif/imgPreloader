@@ -1,4 +1,4 @@
-# imgPreloade
+# imgPreloader
 
 插件的具体使用方法请访问：
 
