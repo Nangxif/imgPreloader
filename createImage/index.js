@@ -108,17 +108,33 @@ const makeJs = baseDir => {
         );
       });
     } else {
-      fs.appendFileSync(
-        resolve(__dirname, fileDir, fileName),
-        `if(${isArray(judge[item[0]]) ? judge[item[0]][0] : judge[item[0]]}){\n`
-      );
-      Object.entries(item[1]).forEach(i => {
-        if (
-          !isArray(judge[item[0]]) ||
-          !judge[item[0]][1] ||
-          !judge[item[0]][1].exclude ||
-          judge[item[0]][1].exclude.find(a => a != i[0])
-        ) {
+      if (judge) {
+        fs.appendFileSync(
+          resolve(__dirname, fileDir, fileName),
+          `if(${
+            isArray(judge[item[0]]) ? judge[item[0]][0] : judge[item[0]]
+          }){\n`
+        );
+        Object.entries(item[1]).forEach(i => {
+          if (
+            !isArray(judge[item[0]]) ||
+            !judge[item[0]][1] ||
+            !judge[item[0]][1].exclude ||
+            judge[item[0]][1].exclude.find(a => a != i[0])
+          ) {
+            fs.appendFileSync(
+              resolve(__dirname, fileDir, fileName),
+              `//${i[0]}\n`
+            );
+            fs.appendFileSync(
+              resolve(__dirname, fileDir, fileName),
+              `imgsList.push(${i[1]});\n`
+            );
+          }
+        });
+        fs.appendFileSync(resolve(__dirname, fileDir, fileName), `}\n`);
+      } else {
+        Object.entries(item[1]).forEach(i => {
           fs.appendFileSync(
             resolve(__dirname, fileDir, fileName),
             `//${i[0]}\n`
@@ -127,9 +143,8 @@ const makeJs = baseDir => {
             resolve(__dirname, fileDir, fileName),
             `imgsList.push(${i[1]});\n`
           );
-        }
-      });
-      fs.appendFileSync(resolve(__dirname, fileDir, fileName), `}\n`);
+        });
+      }
     }
   });
   fs.appendFileSync(

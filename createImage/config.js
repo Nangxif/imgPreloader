@@ -4,10 +4,10 @@ module.exports = {
   output: '../example/config/',
   judge: {
     wechat: `/MicroMessenger/i.test(navigator.userAgent)`,
-    pars: [
-      `/PARS/i.test(navigator.userAgent)`,
+    browser: [
+      `/browser/i.test(navigator.userAgent)`,
       {
-        exclude: ['../example/assets/images/pars/i']
+        exclude: ['../example/assets/images/browser/i']
       }
     ]
   }
