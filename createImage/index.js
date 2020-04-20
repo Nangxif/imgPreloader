@@ -7,7 +7,7 @@ const resolve = path.join;
 const program = require('./commander');
 const { images, js, dir } = program;
 
-const fileName = js || 'imglist.js';
+const fileName = `${js}.js` || 'imglist.js';
 const fileDir = dir || '../src/config/';
 const imagesPath = images || '../src/assets/images';
 let img = {};
@@ -76,7 +76,12 @@ const spinner = ora('create the imageList...');
 const makeJs = baseDir => {
   spinner.start();
   // 先删除文件
-  shell.rm('-r', resolve(__dirname, fileDir, fileName));
+  if (fs.existsSync(resolve(__dirname, fileDir, fileName))) {
+    console.log(chalk.green('\n查找到已生成的数组文件，进行删除操作'));
+    shell.rm('-r', resolve(__dirname, fileDir, fileName));
+  } else {
+    console.log(chalk.green('\n查找不到已生成的数组文件，跳过删除操作'));
+  }
   //   如果文件夹不存在，那么先新增
   if (!fs.existsSync(resolve(__dirname, fileDir))) {
     try {
