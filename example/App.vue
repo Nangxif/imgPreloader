@@ -23,7 +23,7 @@
 
 <script>
 import ImgPreloader from '../src/index.js';
-import imgsList from './assets/images';
+import imgsList from './config/imglist.js';
 export default {
   name: 'App',
   data() {

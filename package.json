@@ -1,11 +1,13 @@
 {
-  "name": "vue-images-preload",
+  "name": "imgPreloader",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "image": "node ./createImage/index.js -i ../example/assets/images -j imglist.js -d ../example/config",
+    "dep_serve": "npm run image && npm run serve"
   },
   "dependencies": {
     "core-js": "^3.6.4",
