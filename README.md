@@ -21,19 +21,20 @@ npm i
 | filename | 生成的文件名称                           | imglist.js           | 需要带上文件后缀.js                                          |
 | entry    | 图片存放的文件夹相对该配置文件地址       | ../src/assets/images |                                                              |
 | output   | 输出的文件存放的文件夹相对该配置文件地址 | ../src/config/       |                                                              |
-| judge    | 判断条件                                 | undefined            | judge是一个对象，该对象的键是文件夹的名称，值是是否加载该文件夹的判断条件，值如果是字符串的话，则一定是判断条件，如果是数组的话，则第一个元素是判断条件，第二个元素是一个对象，该对象只认一个键exclude，这个键的值为去除加载的文件夹地址数组 |
+| judge    | 判断条件                                 | undefined            | judge是一个对象，该对象的键是文件夹的名称，值是是否加载该文件夹的判断条件，值如果是字符串的话，则一定是判断条件，如果是对象的话，则该对象有两个已被认知的键，一个是fileJudge（判断条件），一个是exclude（如果exclude为数组，则为去除加载的文件夹地址数组，若为字符串self，则表示改文件夹全部剔除） |
 
 judge举例
 
 ```javascript
 judge: {
   wechat: `/MicroMessenger/i.test(navigator.userAgent)`,
-  browser: [
-    `/browser/i.test(navigator.userAgent)`,
-    {
+  browser: {
+      fileJudge: `/browser/i.test(navigator.userAgent)`,
       exclude: ['../example/assets/images/browser/i']
-    }
-  ]
+    },
+  none: {
+    exclude: 'self'
+  }
 }
 ```
 

@@ -97,31 +97,53 @@ const makeJs = baseDir => {
   mapDir(baseDir);
   Object.entries(img).forEach(item => {
     if (item[0] == 'common') {
-      item[1].forEach(i => {
+      if (item[1].length > 0) {
         fs.appendFileSync(
           resolve(__dirname, fileDir, fileName),
           `//公共图片\n`
         );
         fs.appendFileSync(
           resolve(__dirname, fileDir, fileName),
-          `imgsList.push(${i});\n`
+          `imgsList.push(\n`
         );
-      });
+        item[1].forEach(i => {
+          fs.appendFileSync(resolve(__dirname, fileDir, fileName), `${i},\n`);
+        });
+        fs.appendFileSync(resolve(__dirname, fileDir, fileName), `);\n`);
+      }
     } else {
       if (judge) {
-        fs.appendFileSync(
-          resolve(__dirname, fileDir, fileName),
-          `if(${
-            isArray(judge[item[0]]) ? judge[item[0]][0] : judge[item[0]]
-          }){\n`
-        );
-        Object.entries(item[1]).forEach(i => {
-          if (
-            !isArray(judge[item[0]]) ||
-            !judge[item[0]][1] ||
-            !judge[item[0]][1].exclude ||
-            judge[item[0]][1].exclude.find(a => a != i[0])
-          ) {
+        // 如果文件夹里面有判断配置，并且这个配置不是自身
+        if (judge[item[0]] && judge[item[0]].exclude !== 'self') {
+          fs.appendFileSync(
+            resolve(__dirname, fileDir, fileName),
+            `if(${
+              typeof judge[item[0]] == 'object'
+                ? judge[item[0]].fileJudge
+                : judge[item[0]]
+            }){\n`
+          );
+          Object.entries(item[1]).forEach(i => {
+            if (
+              typeof judge[item[0]] != 'object' ||
+              !judge[item[0]] ||
+              !judge[item[0]].exclude ||
+              judge[item[0]].exclude.find(a => a != i[0])
+            ) {
+              fs.appendFileSync(
+                resolve(__dirname, fileDir, fileName),
+                `//${i[0]}\n`
+              );
+              fs.appendFileSync(
+                resolve(__dirname, fileDir, fileName),
+                `imgsList.push(${i[1]});\n`
+              );
+            }
+          });
+          fs.appendFileSync(resolve(__dirname, fileDir, fileName), `}\n`);
+        } else if (judge[item[0]] && judge[item[0]].exclude !== 'self') {
+          // 如果文件夹里面没有判断配置
+          Object.entries(item[1]).forEach(i => {
             fs.appendFileSync(
               resolve(__dirname, fileDir, fileName),
               `//${i[0]}\n`
@@ -130,9 +152,9 @@ const makeJs = baseDir => {
               resolve(__dirname, fileDir, fileName),
               `imgsList.push(${i[1]});\n`
             );
-          }
-        });
-        fs.appendFileSync(resolve(__dirname, fileDir, fileName), `}\n`);
+          });
+          fs.appendFileSync(resolve(__dirname, fileDir, fileName), `\n`);
+        }
       } else {
         Object.entries(item[1]).forEach(i => {
           fs.appendFileSync(

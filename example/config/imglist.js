@@ -1,5 +1,13 @@
 let imgsList = [];
 if (/browser/i.test(navigator.userAgent)) {
+  //../example/assets/images/browser/i
+  imgsList.push(
+    require('../assets/images/browser/i/logo.png'),
+    require('../assets/images/browser/i/logo1.png'),
+    require('../assets/images/browser/i/logo2.png'),
+    require('../assets/images/browser/i/logo3.png'),
+    require('../assets/images/browser/i/logo4.png')
+  );
   //../example/assets/images/browser
   imgsList.push(
     require('../assets/images/browser/logo5.png'),
