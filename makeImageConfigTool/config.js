@@ -1,14 +1,14 @@
 module.exports = {
   filename: 'imglist.js',
-  entry: '../example/assets/images',
+  entry: '../example/assets',
   output: '../example/config/',
   judge: {
-    '/wechat': `/MicroMessenger/i.test(navigator.userAgent)`,
-    '/browser': {
+    '/images/wechat': `/MicroMessenger/i.test(navigator.userAgent)`,
+    '/images/browser': {
       fileJudge: `/browser/i.test(navigator.userAgent)`,
-      exclude: ['/browser/i']
+      exclude: ['/images/browser/i']
     },
-    '/none': {
+    '/images/none': {
       exclude: 'self'
     }
   }

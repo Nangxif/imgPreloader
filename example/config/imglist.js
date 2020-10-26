@@ -1,12 +1,13 @@
 let preLoadImg = [];
+///images文件夹
 preLoadImg.push(require('../assets/images/logo12.png'));
-///browser文件夹
+///images/browser文件夹
 if (/browser/i.test(navigator.userAgent)) {
   preLoadImg.push(
     require('../assets/images/browser/logo5.png'),
     require('../assets/images/browser/logo6.png')
   );
-  //browser/i文件夹
+  ///images/browser/i文件夹
   preLoadImg.push(
     require('../assets/images/browser/i/logo.png'),
     require('../assets/images/browser/i/logo1.png'),
@@ -14,8 +15,12 @@ if (/browser/i.test(navigator.userAgent)) {
     require('../assets/images/browser/i/logo3.png'),
     require('../assets/images/browser/i/logo4.png')
   );
+  preLoadImg.push(
+    require('../assets/images/browser/logo5.png'),
+    require('../assets/images/browser/logo6.png')
+  );
 }
-///wechat文件夹
+///images/wechat文件夹
 if (/MicroMessenger/i.test(navigator.userAgent)) {
   preLoadImg.push(
     require('../assets/images/wechat/logo10.png'),

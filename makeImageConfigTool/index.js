@@ -10,21 +10,24 @@ const {
   entry, //图片文件夹地址
   judge //判断条件
 } = require('./config');
-
+// console.log(judge);
 // 遍历图片文件夹
 /*
 遍历文件夹生成对象或者数组需要考虑几点
 1.根文件夹和子文件夹可能重名
 2.文件夹命名可能存在跟图片名称（包括后缀）一样的情况
 */
+function filterSprit(str) {
+  return /^\//.test(str) ? str : '/' + str;
+}
 const mapDir = (baseDir, parent = '') => {
   const files = fs.readdirSync(resolve(__dirname, baseDir));
   let mapDirRes = [];
   files.forEach(item => {
     if (fs.statSync(resolve(__dirname, baseDir, item)).isDirectory()) {
       mapDirRes.push({
-        dir: `${parent}/${item}`,
-        children: mapDir(`${baseDir}/${item}`, item)
+        dir: filterSprit(`${parent}/${item}`),
+        children: mapDir(`${baseDir}/${item}`, filterSprit(`${parent}/${item}`))
       });
     } else {
       // 生成相对位置
@@ -43,7 +46,11 @@ const mapDir = (baseDir, parent = '') => {
 
 // 遍历图片文件夹生成对象
 const imageMap = mapDir(entry);
-console.log(imageMap);
+// console.log(imageMap);
+// fs.appendFileSync(
+//   resolve(__dirname, 'info.js'),
+//   `${JSON.stringify(imageMap)}\n`
+// );
 // 书写函数
 const writeJs = content => {
   fs.appendFileSync(resolve(__dirname, output, filename), `${content}\n`);
@@ -68,8 +75,9 @@ const makeJs = imageMap => {
     }
   }
   writeJs('let preLoadImg=[];');
-  function mapJS(imageMap) {
+  function mapJS(imageMap, parentKey = '') {
     if (imageMap.filter(item => typeof item == 'string').length > 0) {
+      writeJs(`//${parentKey}文件夹`);
       writeJs(
         `preLoadImg.push(${imageMap.filter(item => typeof item == 'string')});`
       );
@@ -77,57 +85,65 @@ const makeJs = imageMap => {
     imageMap
       .filter(item => typeof item !== 'string')
       .forEach(e => {
+        // writeJs(`//${e.dir}文件夹`);
         if (judge[e.dir]) {
           // 有判断条件
           if (typeof judge[e.dir] == 'string') {
             // 判断条件不是对象
-            writeJs(`//${e.dir}文件夹`);
-            writeJs(`if(${judge[e.dir]}){`);
-            mapJS(e.children);
-            writeJs(`}`);
-          } else {
             // 判断条件是对象，如果exclude为self的话这个文件夹直接就不要了
             if (judge[e.dir].exclude != 'self') {
-              if (judge[e.dir].fileJudge) {
-                // 有判断条件的话
-                writeJs(`//${e.dir}文件夹`);
-                writeJs(`if(${judge[e.dir].fileJudge}){`);
-                if (judge[e.dir].exclude) {
-                  judge[e.dir].exclude.forEach(i => {
-                    e.children
-                      .filter(item => typeof item != 'string')
-                      .forEach(items => {
-                        if (i != `/${items.dir}`) {
-                          mapJS(e.children);
-                        }
-                      });
-                  });
-                  mapJS(e.children.filter(item => typeof item == 'string'));
-                } else {
-                  mapJS(e.children);
-                }
-                writeJs(`}`);
+              // writeJs(`//${e.dir}文件夹`);
+              writeJs(`if(${judge[e.dir]}){`);
+              mapJS(e.children, e.dir);
+              writeJs(`}`);
+            }
+          } else {
+            if (judge[e.dir].fileJudge) {
+              // 有判断条件的话
+              // writeJs(`//${e.dir}文件夹`);
+              writeJs(`if(${judge[e.dir].fileJudge}){`);
+              if (judge[e.dir].exclude) {
+                judge[e.dir].exclude.forEach(i => {
+                  e.children
+                    .filter(item => typeof item != 'string')
+                    .forEach(items => {
+                      if (i != `/${items.dir}`) {
+                        mapJS(e.children, e.dir);
+                      }
+                    });
+                });
+                mapJS(
+                  e.children.filter(item => typeof item == 'string'),
+                  e.dir
+                );
               } else {
-                if (judge[e.dir].exclude) {
-                  judge[e.dir].exclude.forEach(i => {
-                    e.children
-                      .filter(item => typeof item != 'string')
-                      .forEach(items => {
-                        if (i != `/${items.dir}`) {
-                          mapJS(e.children);
-                        }
-                      });
-                  });
-                  mapJS(e.children.filter(item => typeof item == 'string'));
-                } else {
-                  mapJS(e.children);
-                }
+                mapJS(e.children, e.dir);
+              }
+              writeJs(`}`);
+            } else {
+              // writeJs(`//${e.dir}文件夹`);
+              if (judge[e.dir].exclude) {
+                const filteStrrArr = e.children.filter(
+                  item => typeof item != 'string'
+                );
+                const filterExcludeArr = filteStrrArr.filter(item => {
+                  return !judge[e.dir].exclude.find(i => i == item.dir);
+                });
+                filterExcludeArr.forEach(item => {
+                  mapJS(item.children, item.dir);
+                });
+                mapJS(
+                  e.children.filter(item => typeof item == 'string'),
+                  e.dir
+                );
+              } else {
+                mapJS(e.children, e.dir);
               }
             }
           }
         } else {
-          writeJs(`//${e.dir}文件夹`);
-          mapJS(e.children);
+          // writeJs(`//${e.dir}文件夹`);
+          mapJS(e.children, e.dir);
         }
       });
   }
